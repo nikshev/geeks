@@ -7,24 +7,22 @@ import scala.collection.mutable.ListBuffer
   * To avoid processing a node more than once, we use a boolean visited array.
   * For simplicity, it is assumed that all vertices are reachable from the starting vertex.
   */
-/**
-  * Edge case class
-  * @param vertexFrom
-  * @param vertexTo
-  */
-case class Edge(vertexFrom: Int, vertexTo: Int)
-
-/**
-  * Vertex case class
-  * @param vertex
-  * @param visited
-  */
-case class Vertex(vertex: Int, visited: Boolean = false)
-
-/**
-  * Main object
-  */
 object GraphBFS {
+
+  /**
+    * Edge case class
+    * @param vertexFrom
+    * @param vertexTo
+    */
+  case class Edge(vertexFrom: Int, vertexTo: Int)
+
+  /**
+    * Vertex case class
+    * @param vertex
+    * @param visited
+    */
+  case class Vertex(vertex: Int, visited: Boolean = false)
+
   private val edgesList = new ListBuffer[Edge]
   private val vertexList = new ListBuffer[Vertex]
 
@@ -65,7 +63,7 @@ object GraphBFS {
       edgesList.foreach(
         row =>
           row match {
-            case Edge(vertexFrom, vertexTo) if ((vertexFrom == vertex && !isVisited(vertexFrom)) || (vertexTo == vertex&& !isVisited(vertexFrom))) => edges += row
+            case Edge(vertexFrom, vertexTo) if ((vertexFrom == vertex && !isVisited(vertexFrom)) || (vertexTo == vertex&& !isVisited(vertexTo))) => edges += row
             case _ => Nil
           }
       )
