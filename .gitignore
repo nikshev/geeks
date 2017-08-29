@@ -1,0 +1,13 @@
+/RUNNING_PID
+/.idea/
+/.idea_modules/
+/.sbtserver/
+/bin/
+/libexec/
+/logs/
+/project/
+/projectFilesBackup/
+/project/*-shim.sbt
+/project/project/
+/project/target/
+/target/
