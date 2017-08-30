@@ -26,13 +26,15 @@ object GraphDFS {
 
   private val edgesList = new ListBuffer[Edge]
   private val stack = new mutable.Stack[Int]
+  private val verticies = new ListBuffer[Int]
 
   /**
     * Clear graph (edges and verticies)
     */
   def clear = {
-    edgesList.clear()
-    stack.clear()
+    edgesList.clear
+    stack.clear
+    verticies.clear
   }
 
   /**
@@ -57,7 +59,7 @@ object GraphDFS {
     edgesList.foreach(
       row =>
         row match {
-          case Edge(vertexFrom, vertexTo) if ((vertexFrom == vertex && !stack.contains(vertexFrom)) || (vertexTo == vertex && !stack.contains(vertexFrom))) => edges += row
+          case Edge(vertexFrom, vertexTo) if ((vertexFrom == vertex  && !verticies.contains(row.vertexTo)) || (vertexTo == vertex && !verticies.contains(row.vertexTo))) => edges += row
           case _ => Nil
         }
     )
@@ -65,30 +67,51 @@ object GraphDFS {
   }
 
   /**
-    * Breadth First Traversal by vertex
-    *
+    * Get edges in any case (if your stack has elements)
     * @param vertex
     * @return
     */
-  def DFS(vertex: Int): List[Int]= {
-    val verticies = new ListBuffer[Int]
-    edgesList.foreach(
-      row =>
-        row match {
-          case Edge(vertexFrom , _ ) if (vertexFrom == vertex && !stack.contains(vertexFrom)) => {
-            verticies += vertexFrom
-            stack.push(vertexFrom)
-            DFS(vertexFrom)
+  def getEdges(vertex: Int): List[Edge] = {
+    var edges = getEdgesByVertex(vertex)
+    while (edges.isEmpty && stack.size != 0) {
+      edges = getEdgesByVertex(stack.pop)
+    }
+    edges
+  }
+
+  /**
+    * Get first vertex
+    * @return
+    */
+  def getFirstVertex():Int = {
+    val headOption = edgesList.headOption
+    headOption match {
+      case Some(edge) => edge.vertexFrom
+      case None => -1
+    }
+  }
+  /**
+    * Deepth First Traversal by vertex
+    *
+    * @return
+    */
+  def DFS(): List[Int] = {
+    var vertex = getFirstVertex()
+    stack.push(vertex)
+    while (stack.size > 0) {
+      val edgeOption = getEdges(vertex).headOption
+      edgeOption match {
+        case Some(edge) => {
+          verticies += vertex
+          if (edge.vertexTo != vertex && !stack.contains(edge.vertexTo)) {
+            vertex = edge.vertexTo
           }
-          case Edge( _ , vertexTo) if (vertexTo == vertex && !stack.contains(vertexTo)) => {
-            verticies += vertexTo
-            stack.push(vertexTo)
-            DFS(vertexTo)
-          }
-          case _ => Nil
+          stack.push(vertex)
         }
-    )
-    verticies.toList.filter(_ != Nil)
+        case None => ;
+      }
+    }
+    verticies.toList.distinct
   }
 
 }
