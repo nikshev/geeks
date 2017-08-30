@@ -26,7 +26,7 @@ object GraphDFS {
 
   private val edgesList = new ListBuffer[Edge]
   private val stack = new mutable.Stack[Int]
-  private val verticies = new ListBuffer[Int]
+  private val vertices = new ListBuffer[Int]
 
   /**
     * Clear graph (edges and verticies)
@@ -34,7 +34,7 @@ object GraphDFS {
   def clear = {
     edgesList.clear
     stack.clear
-    verticies.clear
+    vertices.clear
   }
 
   /**
@@ -59,7 +59,7 @@ object GraphDFS {
     edgesList.foreach(
       row =>
         row match {
-          case Edge(vertexFrom, vertexTo) if ((vertexFrom == vertex  && !verticies.contains(row.vertexTo)) || (vertexTo == vertex && !verticies.contains(row.vertexTo))) => edges += row
+          case Edge(vertexFrom, vertexTo) if ((vertexFrom == vertex  && !vertices.contains(row.vertexTo)) || (vertexTo == vertex && !vertices.contains(row.vertexTo))) => edges += row
           case _ => Nil
         }
     )
@@ -95,11 +95,16 @@ object GraphDFS {
     }
   }
 
+  /**
+    * Get last vertex from vertices list or first vertex if vertices list null
+    * @return
+    */
   def getVertex():Int = {
-    if (verticies.size==0)
-      getFirstVertex()
-    else
-      verticies.last
+    val result: Option[Int] = vertices.lastOption
+    result match {
+      case Some(x) => x
+      case None => getFirstVertex()
+    }
   }
 
   /**
@@ -111,18 +116,18 @@ object GraphDFS {
     stack.push(getVertex())
     whileLoop(stack.size > 0) {
       val edgeOption = getEdges(getVertex()).headOption
-      verticies += getVertex()
+      vertices += getVertex()
       edgeOption match {
         case Some(edge) => {
           if (edge.vertexTo != getVertex() && !stack.contains(edge.vertexTo)) {
-            verticies += edge.vertexTo
+            vertices += edge.vertexTo
           }
           stack.push(edge.vertexTo)
         }
         case None => None
       }
     }
-    verticies.toList.distinct
+    vertices.toList.distinct
   }
 
   /**
