@@ -72,11 +72,15 @@ object GraphDFS {
     * @return
     */
   def getEdges(vertex: Int): List[Edge] = {
-    var edges = getEdgesByVertex(vertex)
-    while (edges.isEmpty && stack.size != 0) {
-      edges = getEdgesByVertex(stack.pop)
+    val edges:Option[List[Edge]] = Some(getEdgesByVertex(vertex))
+    val result = edges match {
+      case Some(edge) if (!edge.isEmpty) => edge
+      case None | _ => {
+        val v = stack.pop
+        getEdgesByVertex(v)
+      }
     }
-    edges
+    result
   }
 
   /**
@@ -90,28 +94,45 @@ object GraphDFS {
       case None => -1
     }
   }
+
+  def getVertex():Int = {
+    if (verticies.size==0)
+      getFirstVertex()
+    else
+      verticies.last
+  }
+
   /**
     * Deepth First Traversal by vertex
     *
     * @return
     */
   def DFS(): List[Int] = {
-    var vertex = getFirstVertex()
-    stack.push(vertex)
-    while (stack.size > 0) {
-      val edgeOption = getEdges(vertex).headOption
+    stack.push(getVertex())
+    whileLoop(stack.size > 0) {
+      val edgeOption = getEdges(getVertex()).headOption
+      verticies += getVertex()
       edgeOption match {
         case Some(edge) => {
-          verticies += vertex
-          if (edge.vertexTo != vertex && !stack.contains(edge.vertexTo)) {
-            vertex = edge.vertexTo
+          if (edge.vertexTo != getVertex() && !stack.contains(edge.vertexTo)) {
+            verticies += edge.vertexTo
           }
-          stack.push(vertex)
+          stack.push(edge.vertexTo)
         }
-        case None => ;
+        case None => None
       }
     }
     verticies.toList.distinct
   }
 
+  /**
+    * While loop function to avoid while loop in code
+    * @param cond
+    * @param block
+    */
+  def whileLoop(cond : =>Boolean)(block : =>Unit) : Unit =
+    if(cond) {
+      block
+      whileLoop(cond)(block)
+    }
 }

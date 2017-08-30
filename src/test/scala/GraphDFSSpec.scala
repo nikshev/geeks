@@ -57,15 +57,15 @@ class GraphDFSSpec extends FlatSpec with Matchers {
     GraphDFS.DFS() should contain theSameElementsAs List(1, 2, 4, 6, 5, 3, 7)
   }
 
-  "GraphDFS Depth First Traversal or DFS for a Graph  case 2" should " be successfully" in {
-    GraphDFS.clear
-    GraphDFS.addEdge(0, 1)
-    GraphDFS.addEdge(1, 4)
-    GraphDFS.addEdge(4, 2)
-    GraphDFS.addEdge(4, 3)
-    GraphDFS.addEdge(2, 0)
-    GraphDFS.addEdge(3, 0)
-    GraphDFS.DFS() should contain theSameElementsAs List(0, 1, 4, 2, 3)
-  }
+   "GraphDFS Depth First Traversal or DFS for a Graph  case 2" should " be successfully" in {
+     GraphDFS.clear
+     GraphDFS.addEdge(0, 1)
+     GraphDFS.addEdge(1, 4)
+     GraphDFS.addEdge(4, 2)
+     GraphDFS.addEdge(4, 3)
+     GraphDFS.addEdge(2, 0)
+     GraphDFS.addEdge(3, 0)
+     GraphDFS.DFS() should contain theSameElementsAs List(0, 1, 4, 2, 3)
+   }
 
 }
